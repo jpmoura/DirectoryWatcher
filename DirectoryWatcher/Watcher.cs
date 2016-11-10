@@ -70,7 +70,7 @@ public class Watcher
         if (Directory.Exists(e.FullPath)) fileOrDirectory = "directory";
         else fileOrDirectory = "file";
 
-        Console.WriteLine("{0}|{1}|{2}|{3}|{4}", e.ChangeType, fileOrDirectory, e.OldFullPath, e.FullPath, fileID);
+        Console.WriteLine("{0}|{1}|{2}|{3}|{4}", e.ChangeType, fileOrDirectory, fileID, e.OldFullPath, e.FullPath);
 
         return;
     }
