@@ -19,7 +19,7 @@ public class Watcher
         if (args.Length != 2)
         {
             // Display usage if no argument was given
-            Console.WriteLine("usage: brfilesmonitor.exe [directory]");
+            Console.WriteLine("usage: directorywatcher.exe [directoryPath]");
             return;
         }
 
@@ -50,27 +50,25 @@ public class Watcher
     // Event handlers.
     private static void OnChanged(object source, FileSystemEventArgs e)
     {
-        if (Directory.Exists(e.FullPath)) Console.WriteLine(e.ChangeType + "|directory|" + e.FullPath);
-        else
-        {
-            string fileID = FileID.getFileUniqueSystemID(e.FullPath);
-            Console.WriteLine("{0}|{1}|{2}|{3}", e.ChangeType, "file", fileID, e.FullPath);
-        }
+        string fileOrDirectory;
+        string fileID = FileID.getFileUniqueSystemID(e.FullPath);
+
+        if (e.ChangeType == WatcherChangeTypes.Deleted) fileOrDirectory = "unknown";
+        else if (Directory.Exists(e.FullPath)) fileOrDirectory = "directory";
+        else fileOrDirectory = "file";
+
+        Console.WriteLine("{0}|{1}|{2}|{3}", e.ChangeType, fileOrDirectory, fileID, e.FullPath);
 
         return;
     }
 
     private static void OnRenamed(object source, RenamedEventArgs e)
     {
-        string fileOrDirectory = null;
-        string fileID = "-1";
+        string fileOrDirectory;
+        string fileID = FileID.getFileUniqueSystemID(e.FullPath);
 
         if (Directory.Exists(e.FullPath)) fileOrDirectory = "directory";
-        else
-        {
-            fileOrDirectory = "file";
-            fileID = FileID.getFileUniqueSystemID(e.FullPath);
-        }
+        else fileOrDirectory = "file";
 
         Console.WriteLine("{0}|{1}|{2}|{3}|{4}", e.ChangeType, fileOrDirectory, e.OldFullPath, e.FullPath, fileID);
 
